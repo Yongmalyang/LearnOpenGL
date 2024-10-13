@@ -156,8 +156,11 @@ void myDisplay()
 
 	if (TeapotBool)
 	{
+		//teapot_model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.0008f, 0.0008f, 0.0008f));
 		teapot_model = glm::translate(model, glm::vec3(0, 0, 0));
-		teapot_model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
+		teapot_model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		//teapot_model = glm::rotate(teapot_model, BaseSpin * -0.017f, glm::vec3(0, 0, 1));
+
 	}
 	DrawObject(teapot_model);
 
