@@ -60,10 +60,8 @@ Shader* FloorShader;
 // ObjectModel
 Model* ourObjectModel;
 
-// 수정한 파트!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 폴더 위치는 exe 파일이 있는 곳. bin/프로젝트이름/Debug 폴더 안에 넣어주기
 const char* ourObjectPath = "./teapot.obj";
-//const char* ourObjectPath = "resources/HW3_resources/teapot.obj";
-// 
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
 glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
@@ -645,9 +643,8 @@ Plane::Plane()
 
 	glBindVertexArray(0);
 
-	// 수정한 파트!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 폴더 위치는 exe 파일이 있는 곳. bin/프로젝트이름/Debug 폴더 안에 넣어주기
 	floorTexture = loadTexture("./wood.png");
-	//floorTexture = loadTexture("resources/HW3_resources/wood.png");
 	FloorShader->use();
 	FloorShader->setInt("texture1", floorTexture);
 
