@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+ï»¿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -60,7 +60,7 @@ Shader* FloorShader;
 // ObjectModel
 Model* ourObjectModel;
 
-// Æú´õ À§Ä¡´Â exe ÆÄÀÏÀÌ ÀÖ´Â °÷. bin/ÇÁ·ÎÁ§Æ®ÀÌ¸§/Debug Æú´õ ¾È¿¡ ³Ö¾îÁÖ±â
+// í´ë” ìœ„ì¹˜ëŠ” exe íŒŒì¼ì´ ìžˆëŠ” ê³³. bin/í”„ë¡œì íŠ¸ì´ë¦„/Debug í´ë” ì•ˆì— ë„£ì–´ì£¼ê¸°
 const char* ourObjectPath = "./teapot.obj";
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
@@ -107,8 +107,55 @@ void myDisplay()
 	DrawObject(objectXform);
 
 	// ADD YOUR ROBOT RENDERING STUFF HERE     /////////////////////////////////////////////////////
+	/*
+	DrawGroundPlane(model);
+	DrawJoint(model);
+	DrawBase(model);
+	DrawArmSegment(model);
+	DrawWrist(model);
+	DrawFingerBase(model);
+	DrawFingerTip(model);
+	*/
+
+	model = glm::translate(model, glm::vec3(BaseTransX, 0.0f, BaseTransZ));
+	model = glm::rotate(model, BaseSpin * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+	DrawBase(model);
+
+	//draw arm segment
+	model = glm::translate(model, glm::vec3(0.0f, 0.4f, 0.0f));
+	model = glm::rotate(model, ShoulderAng * 0.02f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawArmSegment(model);
+	model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+	model = glm::rotate(model, ElbowAng * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawArmSegment(model);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+	model = glm::rotate(model, WristAng * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, WristTwistAng * 0.018f, glm::vec3(0.0f, 1.0f, 0.0f));
+	DrawWrist(model);
+
+	//finger left
+	model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.0f));
+	model = glm::rotate(model, FingerAng1 * 0.02f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawFingerBase(model);
+
+	//fingertip left
+	glm::mat4 model2 = model;
+
+	model2 = glm::translate(model2, glm::vec3(0.0f, 0.35f, 0.0f));
+	model2 = glm::rotate(model2, FingerAng2 * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawFingerTip(model2);
 
 
+	//finger right
+	model = glm::rotate(model, FingerAng1 * -0.035f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawFingerBase(model);
+
+
+	//fingertip right
+	model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f));
+	model = glm::rotate(model, FingerAng2 * -0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	DrawFingerTip(model);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -643,7 +690,7 @@ Plane::Plane()
 
 	glBindVertexArray(0);
 
-	// Æú´õ À§Ä¡´Â exe ÆÄÀÏÀÌ ÀÖ´Â °÷. bin/ÇÁ·ÎÁ§Æ®ÀÌ¸§/Debug Æú´õ ¾È¿¡ ³Ö¾îÁÖ±â
+	// í´ë” ìœ„ì¹˜ëŠ” exe íŒŒì¼ì´ ìžˆëŠ” ê³³. bin/í”„ë¡œì íŠ¸ì´ë¦„/Debug í´ë” ì•ˆì— ë„£ì–´ì£¼ê¸°
 	floorTexture = loadTexture("./wood.png");
 	FloorShader->use();
 	FloorShader->setInt("texture1", floorTexture);
