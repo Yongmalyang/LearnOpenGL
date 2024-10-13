@@ -24,6 +24,8 @@ float WristAng = 90;       // 3
 float WristTwistAng = 10;
 float FingerAng1 = 45;     // 4
 float FingerAng2 = -90;
+// TEAPOT
+bool TeapotBool = false;
 
 // ROBOT COLORS
 GLfloat Ground[] = { 0.5f, 0.5f, 0.5f };
@@ -65,7 +67,6 @@ const char* ourObjectPath = "./teapot.obj";
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
 
-// 주전자!
 glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
 
 // HOUSE KEEPING
@@ -103,10 +104,9 @@ void myDisplay()
 
 	//Ground
 	glm::mat4 model = glm::mat4(1.0f); // initialize matrix to identity matrix first
+	glm::mat4 teapot_model = objectXform;
 
 	DrawGroundPlane(model);
-
-	DrawObject(objectXform);
 
 	// ADD YOUR ROBOT RENDERING STUFF HERE     /////////////////////////////////////////////////////
 	
@@ -130,8 +130,9 @@ void myDisplay()
 	model = glm::rotate(model, WristTwistAng *0.017f, glm::vec3(0, 1, 0));
 	DrawWrist(model);
 
-	
 	// input 5
+
+	// 미리저장
 	glm::mat4 model2 = model;
 
 	model = glm::translate(model, glm::vec3(0, 0.2f, 0));
@@ -142,6 +143,7 @@ void myDisplay()
 	model = glm::rotate(model, FingerAng2 * 0.017f, glm::vec3(0, 0, 1));
 	DrawFingerTip(model);
 
+	// 손목위치에서 두번째 손가락 생성
 	model2 = glm::translate(model2, glm::vec3(0, 0.2f, 0));
 	model2 = glm::rotate(model2, FingerAng1 * -0.017f, glm::vec3(0, 0, 1));
 	DrawFingerBase(model2);
@@ -149,6 +151,15 @@ void myDisplay()
 	model2 = glm::translate(model2, glm::vec3(0, 0.35f, 0));
 	model2 = glm::rotate(model2, FingerAng2 * -0.017f, glm::vec3(0, 0, 1));
 	DrawFingerTip(model2);
+
+	// TEAPOT MOVEMENT     /////////////////////////////////////////////////////
+
+	if (TeapotBool)
+	{
+		teapot_model = glm::translate(model, glm::vec3(0, 0, 0));
+		teapot_model = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
+	}
+	DrawObject(teapot_model);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,8 +280,10 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key >= GLFW_KEY_1 && key <= GLFW_KEY_5 && action == GLFW_PRESS)
 		RobotControl = key - GLFW_KEY_1;
-	else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-		RobotControl = 5;
+	else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+		TeapotBool = !TeapotBool;
+		std::cout << TeapotBool;
+	}
 	else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 }
@@ -310,12 +323,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		case 2: ShoulderAng += yoffset * -90; ElbowAng += xoffset  * 90; break;
 		case 3: WristAng += yoffset  * -180; WristTwistAng += xoffset  * 180; break;
 		case 4: FingerAng1 += yoffset  * 90; FingerAng2 += xoffset * 180; break;
-		// space key pressed
-		case 5:  break;
 		default: break;
 		}
-	} 
-	
+	} 	
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
