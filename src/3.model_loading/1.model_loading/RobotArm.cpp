@@ -64,6 +64,8 @@ Model* ourObjectModel;
 const char* ourObjectPath = "./teapot.obj";
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
+
+// 주전자!
 glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
 
 // HOUSE KEEPING
@@ -107,55 +109,46 @@ void myDisplay()
 	DrawObject(objectXform);
 
 	// ADD YOUR ROBOT RENDERING STUFF HERE     /////////////////////////////////////////////////////
-	/*
-	DrawGroundPlane(model);
-	DrawJoint(model);
-	DrawBase(model);
-	DrawArmSegment(model);
-	DrawWrist(model);
-	DrawFingerBase(model);
-	DrawFingerTip(model);
-	*/
-
-	model = glm::translate(model, glm::vec3(BaseTransX, 0.0f, BaseTransZ));
-	model = glm::rotate(model, BaseSpin * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+	
+	// input 1
+	model = glm::translate(model, glm::vec3(BaseTransX, 0, BaseTransZ));
+	// input 2
+	model = glm::rotate(model, BaseSpin*0.05f, glm::vec3(0, 1, 0));
 	DrawBase(model);
 
-	//draw arm segment
-	model = glm::translate(model, glm::vec3(0.0f, 0.4f, 0.0f));
-	model = glm::rotate(model, ShoulderAng * 0.02f, glm::vec3(0.0f, 0.0f, 1.0f));
+	// input 3 (x축 움직임: ElbowAng, y축 움직임: ShoulderAng)
+	model = glm::translate(model, glm::vec3(0, 0.4f, 0));
+	model = glm::rotate(model, ShoulderAng *0.05f, glm::vec3(0, 0, 1));
 	DrawArmSegment(model);
-	model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
-	model = glm::rotate(model, ElbowAng * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(0, 0.5f, 0));
+	model = glm::rotate(model, ElbowAng*0.015f, glm::vec3(0, 0, 1));
 	DrawArmSegment(model);
 
-	model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
-	model = glm::rotate(model, WristAng * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::rotate(model, WristTwistAng * 0.018f, glm::vec3(0.0f, 1.0f, 0.0f));
+	// input 4
+	model = glm::translate(model, glm::vec3(0, 0.5f, 0));
+	model = glm::rotate(model, WristAng*0.017f, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, WristTwistAng *0.017f, glm::vec3(0, 1, 0));
 	DrawWrist(model);
 
-	//finger left
-	model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.0f));
-	model = glm::rotate(model, FingerAng1 * 0.02f, glm::vec3(0.0f, 0.0f, 1.0f));
-	DrawFingerBase(model);
-
-	//fingertip left
+	
+	// input 5
 	glm::mat4 model2 = model;
 
-	model2 = glm::translate(model2, glm::vec3(0.0f, 0.35f, 0.0f));
-	model2 = glm::rotate(model2, FingerAng2 * 0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
-	DrawFingerTip(model2);
+	model = glm::translate(model, glm::vec3(0, 0.2f, 0));
+	model = glm::rotate(model, FingerAng1 * 0.017f, glm::vec3(0, 0, 1));
+	DrawFingerBase(model);	
 
-
-	//finger right
-	model = glm::rotate(model, FingerAng1 * -0.035f, glm::vec3(0.0f, 0.0f, 1.0f));
-	DrawFingerBase(model);
-
-
-	//fingertip right
-	model = glm::translate(model, glm::vec3(0.0f, 0.35f, 0.0f));
-	model = glm::rotate(model, FingerAng2 * -0.018f, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(0, 0.35f, 0));
+	model = glm::rotate(model, FingerAng2 * 0.017f, glm::vec3(0, 0, 1));
 	DrawFingerTip(model);
+
+	model2 = glm::translate(model2, glm::vec3(0, 0.2f, 0));
+	model2 = glm::rotate(model2, FingerAng1 * -0.017f, glm::vec3(0, 0, 1));
+	DrawFingerBase(model2);
+
+	model2 = glm::translate(model2, glm::vec3(0, 0.35f, 0));
+	model2 = glm::rotate(model2, FingerAng2 * -0.017f, glm::vec3(0, 0, 1));
+	DrawFingerTip(model2);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,6 +269,8 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key >= GLFW_KEY_1 && key <= GLFW_KEY_5 && action == GLFW_PRESS)
 		RobotControl = key - GLFW_KEY_1;
+	else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		RobotControl = 5;
 	else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 }
@@ -312,9 +307,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		{
 		case 0: BaseTransX += xoffset; BaseTransZ -= yoffset; break;
 		case 1: BaseSpin += xoffset * 180 ; break;
-		case 2: ShoulderAng += yoffset   * -90; ElbowAng += xoffset  * 90; break;
+		case 2: ShoulderAng += yoffset * -90; ElbowAng += xoffset  * 90; break;
 		case 3: WristAng += yoffset  * -180; WristTwistAng += xoffset  * 180; break;
 		case 4: FingerAng1 += yoffset  * 90; FingerAng2 += xoffset * 180; break;
+		// space key pressed
+		case 5:  break;
+		default: break;
 		}
 	} 
 	
