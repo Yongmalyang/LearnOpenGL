@@ -333,7 +333,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 	if (RightButtonDown)
 	{
-		camera.ProcessMouseMovement(xoffset * 500, yoffset * 500);
+		camera.ProcessMouseMovement(xoffset * 300, yoffset * 300);
 	}
 
 	if (LeftButtonDown)
