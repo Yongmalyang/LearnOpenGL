@@ -36,6 +36,7 @@ GLfloat FingerJoints[] = { 0.5f, 0.5f, 0.5f };
 
 // USER INTERFACE GLOBALS
 int LeftButtonDown = 0;    // MOUSE STUFF
+int RightButtonDown = 0;    // MOUSE STUFF
 int RobotControl = 0;
 
 // settings
@@ -132,7 +133,7 @@ void myDisplay()
 
 	// input 5
 
-	// 미리저장
+	// 미리 저장
 	glm::mat4 model2 = model;
 
 	model = glm::translate(model, glm::vec3(0, 0.2f, 0));
@@ -142,8 +143,8 @@ void myDisplay()
 	model = glm::translate(model, glm::vec3(0, 0.35f, 0));
 	model = glm::rotate(model, FingerAng2 * 0.017f, glm::vec3(0, 0, 1));
 	DrawFingerTip(model);
-
-	// 손목위치에서 두번째 손가락 생성
+	
+	// 손목 위치에서 두번째 손가락 생성
 	model2 = glm::translate(model2, glm::vec3(0, 0.2f, 0));
 	model2 = glm::rotate(model2, FingerAng1 * -0.017f, glm::vec3(0, 0, 1));
 	DrawFingerBase(model2);
@@ -280,7 +281,7 @@ void destroyShader()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
+	// input 정리
 	if (key >= GLFW_KEY_1 && key <= GLFW_KEY_5 && action == GLFW_PRESS)
 		RobotControl = key - GLFW_KEY_1;
 	else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
@@ -289,6 +290,17 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	// 과제 4 추가
+	float movementTime = deltaTime * 10;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, movementTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, movementTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, movementTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, movementTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -304,18 +316,25 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	// 과제 4 추가
+
 	if (firstMouse)
 	{
-		lastX = (float) xpos;
-		lastY = (float) ypos;
+		lastX = (float)xpos;
+		lastY = (float)ypos;
 		firstMouse = false;
 	}
 
-	float xoffset = (float) (xpos - lastX) / SCR_WIDTH;
-	float yoffset = (float) (lastY - ypos) / SCR_HEIGHT; // reversed since y-coordinates go from bottom to top
+	float xoffset = (float)(xpos - lastX) / SCR_WIDTH;
+	float yoffset = (float)(lastY - ypos) / SCR_HEIGHT; // reversed since y-coordinates go from bottom to top
 
-	lastX = (float) xpos;
-	lastY = (float) ypos;
+	lastX = (float)xpos;
+	lastY = (float)ypos;
+
+	if (RightButtonDown)
+	{
+		camera.ProcessMouseMovement(xoffset * 500, yoffset * 500);
+	}
 
 	if (LeftButtonDown)
 	{
@@ -340,6 +359,15 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
 		LeftButtonDown = 0;
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		RightButtonDown = 1;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	{
+		RightButtonDown = 0;
 	}
 }
 
