@@ -291,7 +291,7 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 	else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	// 과제 4 추가
+	// 과제 4 추가, WASD 이동 구현
 	float movementTime = deltaTime * 10;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, movementTime);
@@ -331,6 +331,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastX = (float)xpos;
 	lastY = (float)ypos;
 
+	// 우클릭 시 카메라 회전 (속도 조정 위해 300 정도로 숫자 보정)
 	if (RightButtonDown)
 	{
 		camera.ProcessMouseMovement(xoffset * 300, yoffset * 300);
