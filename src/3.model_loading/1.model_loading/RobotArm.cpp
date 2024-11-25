@@ -73,7 +73,8 @@ glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5
 
 
 // HW6: L키 토글 bool
-bool isAngularOn = false;
+bool isAngularOn = true;
+bool toggleAngular = true;
 
 // HOUSE KEEPING
 void initGL(GLFWwindow** window);
@@ -270,7 +271,7 @@ void setupShader()
 
 	// Light attributes
 	PhongShader->setVec3("lightColor", lightColor);
-	PhongShader->setBool("toggleAngular", isAngularOn);
+	PhongShader->setBool("toggleAngular", toggleAngular);
 
 	PhongShader->setVec3("light.position", camera.Position);
 	PhongShader->setVec3("light.direction", camera.Front);
@@ -295,7 +296,7 @@ void setupShader()
 	FloorShader = new Shader("advanced_lighting.vs", "advanced_lighting.fs");
 	FloorShader->use();
 	FloorShader->setVec3("lightColor", lightColor);
-	FloorShader->setBool("toggleAngular", isAngularOn);
+	FloorShader->setBool("toggleAngular", toggleAngular);
 
 	FloorShader->setVec3("light.position", camera.Position);
 	FloorShader->setVec3("light.direction", camera.Front);
@@ -349,8 +350,16 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 		camera.ProcessKeyboard(RIGHT, movementTime);
 
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		std::cout << isAngularOn;
+		if (isAngularOn) {
+			// 끄기
+			toggleAngular = false;
+		}
+		else {
+			// 켜기
+			toggleAngular = true;
+		}
 		isAngularOn = !isAngularOn;
+		std::cout << isAngularOn;
 	}
 }
 

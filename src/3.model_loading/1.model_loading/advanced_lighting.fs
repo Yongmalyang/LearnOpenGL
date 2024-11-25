@@ -34,7 +34,7 @@ uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 ObjColor;
 uniform bool toggleAngular;
-uniform Light light; // Added to use Light structure
+uniform Light light;
 
 void main()
 {           
@@ -58,14 +58,14 @@ void main()
     
     vec3 result = ambient + diffuse + specular;
 
-    if(toggleAngular) {
+    //if(toggleAngular) {
         // spotlight (soft edges) -> angular
         float theta = dot(lightDir, normalize(-light.direction)); 
         float epsilon = (light.cutOff - light.outerCutOff);
         float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
         diffuse  *= intensity;
         specular *= intensity;
-    }
+    //}
 
     // attenuation
     float distance    = length(light.position - fs_in.FragPos);
