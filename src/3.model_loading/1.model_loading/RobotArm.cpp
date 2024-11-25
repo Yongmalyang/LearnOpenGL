@@ -201,12 +201,14 @@ int main()
 		PhongShader->setMat4("view", camera.GetViewMatrix());
 		PhongShader->setVec3("viewPos", camera.Position);
 		PhongShader->setVec3("lightPos", camera.Position);
+		PhongShader->setBool("toggleAngular", toggleAngular);
 
 		FloorShader->use();
 		FloorShader->setMat4("projection", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f));
 		FloorShader->setMat4("view", camera.GetViewMatrix());
 		FloorShader->setVec3("viewPos", camera.Position);
 		FloorShader->setVec3("lightPos", camera.Position);
+		FloorShader->setBool("toggleAngular", toggleAngular);
 
 		// render
 		myDisplay();
