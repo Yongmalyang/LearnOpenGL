@@ -65,7 +65,8 @@ Model* ourObjectModel;
 
 // 폴더 위치는 exe 파일이 있는 곳. bin/프로젝트이름/Debug 폴더 안에 넣어주기
 // 과제 5: teapot 대신 내 오브젝트 넣기
-const char* ourObjectPath = "./mouse_jy.obj";
+// 과제 6에서 이거 원상복귀
+const char* ourObjectPath = "./teapot.obj";
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
 
