@@ -201,6 +201,7 @@ int main()
 		PhongShader->setMat4("view", camera.GetViewMatrix());
 		PhongShader->setVec3("viewPos", camera.Position);
 		PhongShader->setVec3("lightPos", camera.Position);
+		PhongShader->setVec3("lightDir", camera.Front);
 		PhongShader->setBool("toggleAngular", toggleAngular);
 
 		FloorShader->use();
@@ -208,6 +209,7 @@ int main()
 		FloorShader->setMat4("view", camera.GetViewMatrix());
 		FloorShader->setVec3("viewPos", camera.Position);
 		FloorShader->setVec3("lightPos", camera.Position);
+		FloorShader->setVec3("lightDir", camera.Front);
 		FloorShader->setBool("toggleAngular", toggleAngular);
 
 		// render

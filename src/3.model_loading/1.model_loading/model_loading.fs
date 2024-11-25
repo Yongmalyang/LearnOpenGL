@@ -62,7 +62,7 @@ void main()
 
     if(toggleAngular){
         // spotlight (soft edges) -> angular
-        float theta = dot(lightDir, normalize(-light.direction)); 
+        float theta = dot(lightDir, normalize(-lightDir)); 
         float epsilon = (light.cutOff - light.outerCutOff);
         float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
         diffuse  *= intensity;
