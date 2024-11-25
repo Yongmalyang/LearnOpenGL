@@ -70,8 +70,7 @@ const char* ourObjectPath = "./teapot.obj";
 // translate it so it's at the center of the scene
 // it's a bit too big for our scene, so scale it down
 
-glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.3f, 0.0f)), glm::vec3(0.03f, 0.03f, 0.03f));
-
+glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f)), glm::vec3(0.08f, 0.08f, 0.08f));
 
 // HW6: L키 토글 bool
 bool isAngularOn = true;
