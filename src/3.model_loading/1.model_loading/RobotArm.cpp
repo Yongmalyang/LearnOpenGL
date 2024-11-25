@@ -349,6 +349,7 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 		camera.ProcessKeyboard(RIGHT, movementTime);
 
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		std::cout << isAngularOn;
 		isAngularOn = !isAngularOn;
 	}
 }
