@@ -1,16 +1,40 @@
 #version 330 core
 out vec4 FragColor;
 
+struct Material {
+    sampler2D diffuse;
+    sampler2D specular;    
+    float shininess;
+}; 
+
+struct Light {
+    vec3 position;  
+    vec3 direction;
+    float cutOff;
+    float outerCutOff;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+	
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 in vec2 TexCoords;
 in vec3 Normal;  
 in vec3 FragPos;  
 
+// Uniforms
 uniform sampler2D texture_diffuse1;
 uniform vec3 lightPos; 
 uniform vec3 viewPos; 
 uniform vec3 lightColor;
 uniform vec3 ObjColor;
 uniform bool hasTextures;
+uniform bool toggleAngular; // Added
+uniform Light light;        // Added
 
 void main()
 {    
@@ -34,5 +58,24 @@ void main()
     vec3 specular = specularStrength * spec * lightColor;  
         
     vec3 result = (ambient + diffuse + specular) * fColor;
+    FragColor = vec4(result, 1.0);
+
+    if(toggleAngular){
+        // spotlight (soft edges) -> angular
+        float theta = dot(lightDir, normalize(-light.direction)); 
+        float epsilon = (light.cutOff - light.outerCutOff);
+        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+        diffuse  *= intensity;
+        specular *= intensity;
+    }
+
+    // attenuation
+    float distance    = length(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+    ambient  *= attenuation; 
+    diffuse   *= attenuation;
+    specular *= attenuation;   
+        
+    result = ambient + diffuse + specular; // Use the existing result
     FragColor = vec4(result, 1.0);
 }

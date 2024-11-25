@@ -71,6 +71,10 @@ const char* ourObjectPath = "./mouse_jy.obj";
 
 glm::mat4 objectXform = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.3f, 0.0f)), glm::vec3(0.03f, 0.03f, 0.03f));
 
+
+// HW6: L키 토글 bool
+bool isAngularOn = false;
+
 // HOUSE KEEPING
 void initGL(GLFWwindow** window);
 void setupShader();
@@ -266,10 +270,51 @@ void setupShader()
 
 	// Light attributes
 	PhongShader->setVec3("lightColor", lightColor);
+	PhongShader->setBool("toggleAngular", isAngularOn);
+
+	PhongShader->setVec3("light.position", camera.Position);
+	PhongShader->setVec3("light.direction", camera.Front);
+	PhongShader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+	PhongShader->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+	PhongShader->setVec3("viewPos", camera.Position);
+
+	// light properties
+	PhongShader->setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
+	// we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
+	// each environment and lighting type requires some tweaking to get the best out of your environment.
+	PhongShader->setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+	PhongShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	PhongShader->setFloat("light.constant", 1.0f);
+	PhongShader->setFloat("light.linear", 0.09f);
+	PhongShader->setFloat("light.quadratic", 0.032f);
+
+	// material properties
+	PhongShader->setFloat("material.shininess", 32.0f);
+
 
 	FloorShader = new Shader("advanced_lighting.vs", "advanced_lighting.fs");
 	FloorShader->use();
 	FloorShader->setVec3("lightColor", lightColor);
+	FloorShader->setBool("toggleAngular", isAngularOn);
+
+	FloorShader->setVec3("light.position", camera.Position);
+	FloorShader->setVec3("light.direction", camera.Front);
+	FloorShader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+	FloorShader->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+	FloorShader->setVec3("viewPos", camera.Position);
+
+	// light properties
+	FloorShader->setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
+	// we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
+	// each environment and lighting type requires some tweaking to get the best out of your environment.
+	FloorShader->setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+	FloorShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	FloorShader->setFloat("light.constant", 1.0f);
+	FloorShader->setFloat("light.linear", 0.09f);
+	FloorShader->setFloat("light.quadratic", 0.032f);
+
+	// material properties
+	FloorShader->setFloat("material.shininess", 32.0f);
 }
 
 void destroyShader()
@@ -302,6 +347,10 @@ void processInput(GLFWwindow* window, int key, int scancode, int action, int mod
 		camera.ProcessKeyboard(LEFT, movementTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, movementTime);
+
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		isAngularOn = !isAngularOn;
+	}
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
