@@ -29,7 +29,7 @@ GLubyte* raytrace::display(void)
 void raytrace::initScene()
 {
 	s1 = makeSphere(0.0, 0.0, -2.0, 0.25);
-	s1->m = shader.makeMaterial(0.8, 0.1, 0.15, 0.3);
+	s1->m = shader.makeMaterial(0.8, 0.1, 0.15, 0.3, 1, 0, 0, 0);
 
 	tracer.s1 = s1;
 }

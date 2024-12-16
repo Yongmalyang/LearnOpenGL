@@ -42,6 +42,10 @@ namespace raytraceData {
 		color c;
 		/* ambient reflectivity */
 		GLfloat amb;
+		GLfloat dif;
+		GLfloat spec;
+		GLfloat transparency;
+		GLfloat reflectivity;
 	} material;
 
 	typedef struct sphere {

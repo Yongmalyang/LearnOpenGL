@@ -10,7 +10,7 @@ shader::~shader()
 {
 }
 
-material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb) {
+material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb, GLfloat dif, GLfloat spec, GLfloat transparency, GLfloat reflectivity) {
 	material* m;
 
 	/* allocate memory */
@@ -21,6 +21,12 @@ material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb) {
 	m->c.g = g;
 	m->c.b = b;
 	m->amb = amb;
+
+	// 여기서부터 직접 추가한 내용
+	m->dif = dif;
+	m->spec = spec;
+	m->transparency = transparency;
+	m->reflectivity = reflectivity;
 	return(m);
 }
 
