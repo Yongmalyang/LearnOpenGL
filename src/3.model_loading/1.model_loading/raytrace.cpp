@@ -44,6 +44,7 @@ void raytrace::initCamera(int w, int h)
 	height = h;
 }
 
+// 여기서 raytracing이 이루어짐.
 void raytrace::drawScene(void)
 {
 	int i, j;
@@ -106,6 +107,10 @@ sphere* raytrace::makeSphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r) {
 	s->m = NULL;   /* material */
 	return(s);
 }
+
+// rayColor 여기서부터 본격적 수정!!! 
+// rayColor, tracer, shader 이 3개가 본격적 수정하게 될 코드들
+// 
 
 /* returns the color seen by ray r in parameter c */
 void raytrace::rayColor(ray* r, color* c) {

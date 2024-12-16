@@ -1,3 +1,7 @@
+// main function
+// open GL function들은 건드릴 필요 없음. 
+// 역할: frame buffer를 만들어서 frame buffer object의 각각의 픽셀 정보가 ray-trace된 정보로 저장되도록 하는 역할, 최종적 display만!!
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

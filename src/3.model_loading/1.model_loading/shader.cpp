@@ -28,6 +28,10 @@ material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb) {
 
 /* shade */
 /* color of point p with normal vector n and material m returned in c */
+
+// diffuse와 specular는 이 함수에서 구현(step 1)
+// shadow ray는 여기서(step 3)
+
 void shader::shade(point* p, vector* n, material* m, color* c) {
 
 	/* so far, just finds ambient component of color */

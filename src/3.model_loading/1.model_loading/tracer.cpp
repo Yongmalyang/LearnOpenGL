@@ -23,6 +23,11 @@ void tracer::findPointOnRay(ray* r, float t, point* p) {
 
 /* raySphereIntersect */
 /* returns TRUE if ray r hits sphere s, with parameter value in t */
+
+// 이건 이미 구현되어있음.
+// 새로운 물체를 추가한다면... 이 함수랑 비슷한 걸 추가해줘야...
+// 오브젝트 추가는 이 지점에서 (step 2)
+
 int tracer::raySphereIntersect(ray* r, sphere* s, float* t) {
 	point p;   /* start of transformed ray */
 	float a, b, c;  /* coefficients of quadratic equation */
