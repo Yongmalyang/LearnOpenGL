@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <math.h>
 
 using namespace raytraceData;
 
@@ -30,6 +31,26 @@ material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb, GLf
 	return(m);
 }
 
+float dotProduct(vector* v1, vector* v2) {
+    return v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
+}
+
+void normalize(vector* v) {
+    float length = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+    if (length > 0.0f) {
+        v->x /= length;
+        v->y /= length;
+        v->z /= length;
+    }
+}
+
+void reflect(vector* L, vector* N, vector* R) {
+    float dotLN = 2.0f * dotProduct(N, L);
+    R->x = dotLN * N->x - L->x;
+    R->y = dotLN * N->y - L->y;
+    R->z = dotLN * N->z - L->z;
+}
+
 /* LIGHTING CALCULATIONS */
 
 /* shade */
@@ -40,14 +61,37 @@ material* shader::makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb, GLf
 
 void shader::shade(point* p, vector* n, material* m, color* c) {
 
-	/* so far, just finds ambient component of color */
-	c->r = m->amb * m->c.r;
-	c->g = m->amb * m->c.g;
-	c->b = m->amb * m->c.b;
+    // Ambient 조명
+    c->r = m->amb * m->c.r;
+    c->g = m->amb * m->c.g;
+    c->b = m->amb * m->c.b;
 
-	/* clamp color values to 1.0 */
-	if (c->r > 1.0) c->r = 1.0;
-	if (c->g > 1.0) c->g = 1.0;
-	if (c->b > 1.0) c->b = 1.0;
+    // 가상 광원 설정 (정적 위치)
+    vector lightDir = { 0.0f, -1.0f, 0.0f, 0.0f };  // 광원 방향
+    vector viewDir = { -p->x, -p->y, -p->z, 0.0f };  // 시점 방향
+
+    normalize(&lightDir);
+    normalize(n);
+    normalize(&viewDir);
+
+    // Diffuse 조명 계산
+    float dotNL = max(0.0f, dotProduct(n, &lightDir));
+    c->r += m->dif * m->c.r * dotNL;
+    c->g += m->dif * m->c.g * dotNL;
+    c->b += m->dif * m->c.b * dotNL;
+
+    // Specular 조명 계산
+    vector reflectDir;
+    reflect(&lightDir, n, &reflectDir);
+    float spec = pow(max(0.0f, dotProduct(&reflectDir, &viewDir)), 32);  // 광택 계수 32
+    c->r += m->spec * spec;
+    c->g += m->spec * spec;
+    c->b += m->spec * spec;
+
+    // 색상 범위 제한
+    c->r = min(1.0f, c->r);
+    c->g = min(1.0f, c->g);
+    c->b = min(1.0f, c->b);
 
 }
+
