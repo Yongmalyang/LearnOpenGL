@@ -60,38 +60,39 @@ void reflect(vector* L, vector* N, vector* R) {
 // shadow ray는 여기서(step 3)
 
 void shader::shade(point* p, vector* n, material* m, color* c) {
+    // 전역 ambient 조명 강도 높임
+    float globalAmbient = 0.7f;
 
-    // Ambient 조명
-    c->r = m->amb * m->c.r;
-    c->g = m->amb * m->c.g;
-    c->b = m->amb * m->c.b;
+    // 전역 조명 계산
+    c->r = globalAmbient * m->c.r;
+    c->g = globalAmbient * m->c.g;
+    c->b = globalAmbient * m->c.b;
 
-    // 가상 광원 설정 (정적 위치)
-    vector lightDir = { 0.0f, -1.0f, 0.0f, 0.0f };  // 광원 방향
-    vector viewDir = { -p->x, -p->y, -p->z, 0.0f };  // 시점 방향
+    // 광원 위치를 높이고 강도도 증가시킴
+    vector lightDir = { 0.0f, -2.0f, 1.0f, 0.0f };
+    float lightIntensity = 1.5f;
 
+    vector viewDir = { -p->x, -p->y, -p->z, 0.0f };
     normalize(&lightDir);
     normalize(n);
     normalize(&viewDir);
 
-    // Diffuse 조명 계산
+    // Diffuse 조명 계산 (강도 증가)
     float dotNL = max(0.0f, dotProduct(n, &lightDir));
-    c->r += m->dif * m->c.r * dotNL;
-    c->g += m->dif * m->c.g * dotNL;
-    c->b += m->dif * m->c.b * dotNL;
+    c->r += lightIntensity * m->dif * m->c.r * dotNL;
+    c->g += lightIntensity * m->dif * m->c.g * dotNL;
+    c->b += lightIntensity * m->dif * m->c.b * dotNL;
 
-    // Specular 조명 계산
+    // Specular 조명 계산 (강도 증가)
     vector reflectDir;
     reflect(&lightDir, n, &reflectDir);
-    float spec = pow(max(0.0f, dotProduct(&reflectDir, &viewDir)), 32);  // 광택 계수 32
-    c->r += m->spec * spec;
-    c->g += m->spec * spec;
-    c->b += m->spec * spec;
+    float spec = pow(max(0.0f, dotProduct(&reflectDir, &viewDir)), 32);
+    c->r += lightIntensity * m->spec * spec;
+    c->g += lightIntensity * m->spec * spec;
+    c->b += lightIntensity * m->spec * spec;
 
     // 색상 범위 제한
     c->r = min(1.0f, c->r);
     c->g = min(1.0f, c->g);
     c->b = min(1.0f, c->b);
-
 }
-
